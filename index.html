@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Interactive D3 Smith chart with impedance, admittance and Touchstone S11 measurements."
+      content="Interactive Smith chart with impedance, admittance and Touchstone S11 measurements."
     />
     <title>Smith chart · RF workbench</title>
-    <script type="module" crossorigin src="./assets/index-dv0kxrS4.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-CM5bkdlW.css">
+    <script type="module" crossorigin src="./assets/index-B3nSdAFG.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CdaOzV6j.css">
   </head>
   <body>
     <main>
@@ -32,13 +32,75 @@
         <button id="reset-view" type="button">Reset view</button>
       </div>
       <div class="workspace">
-        <section class="chart-panel" aria-label="Interactive Smith chart">
-          <div id="smith"></div>
-          <p class="hint">
-            Scroll to zoom · drag to pan · drag a numbered marker along a trace. Grid values are
-            normalized to Z₀.
-          </p>
-        </section>
+        <div class="chart-column">
+          <section class="chart-panel" aria-label="Interactive Smith chart">
+            <div id="smith"></div>
+            <p class="hint">
+              Scroll to zoom · drag to pan · drag a numbered marker along a trace. Grid values are
+              normalized to Z₀.
+            </p>
+          </section>
+          <section class="panel scales-panel" aria-label="Parameter scales">
+            <div class="scales-heading">
+              <h2>Parameter scales</h2>
+              <div role="tablist" aria-label="Readout source" class="readout-tabs">
+                <button
+                  type="button"
+                  role="tab"
+                  id="cursor-tab"
+                  aria-controls="parameter-panel"
+                  aria-selected="true"
+                >
+                  Cursor
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  id="marker-tab"
+                  aria-controls="parameter-panel"
+                  aria-selected="false"
+                  tabindex="-1"
+                >
+                  Marker
+                </button>
+              </div>
+            </div>
+            <div id="parameter-panel" role="tabpanel" aria-labelledby="cursor-tab" tabindex="0">
+              <div class="readout-context">
+                <div id="cursor-help">
+                  Move over the chart. Scales show dimensionless ratios unless marked dB.
+                </div>
+                <div id="marker-selection" hidden>
+                  <label for="marker-select">Selected marker</label>
+                  <span id="marker-color" class="color-swatch" aria-hidden="true" hidden></span>
+                  <select id="marker-select" disabled>
+                    <option value="">No markers available</option>
+                  </select>
+                </div>
+                <div id="marker-readout" hidden>Load a trace to place a marker.</div>
+              </div>
+              <dl id="parameter-readout" class="scale-readout">
+                <div>
+                  <dt>Γ · dimensionless</dt>
+                  <dd id="parameter-gamma">—</dd>
+                </div>
+                <div>
+                  <dt>Z · Ω</dt>
+                  <dd id="parameter-impedance">—</dd>
+                </div>
+                <div>
+                  <dt>Y · mS</dt>
+                  <dd id="parameter-admittance">—</dd>
+                </div>
+                <div>
+                  <dt>Q · dimensionless</dt>
+                  <dd id="parameter-q">—</dd>
+                </div>
+              </dl>
+              <div id="smith-scales"></div>
+            </div>
+          </section>
+        </div>
         <aside>
           <section class="panel">
             <h2>Measurements</h2>
@@ -47,19 +109,42 @@
             <p id="file-help" class="hint">One-port RI, MA or DB data, with a 50 Ω reference.</p>
             <button id="sample" type="button">Load sample trace</button>
             <p id="file-status" role="status" aria-live="polite">No measurement loaded.</p>
+            <div id="trace-list" aria-label="Loaded traces"></div>
           </section>
-          <section class="panel">
-            <h2>Cursor</h2>
-            <p class="hint">Move over the chart to inspect a point.</p>
-            <div id="cursor-readout" class="readout"></div>
-          </section>
-          <section class="panel">
-            <h2>Marker</h2>
-            <div id="marker-readout" class="readout">Load a trace to place a marker.</div>
+          <section class="panel" aria-labelledby="comparison-heading">
+            <h2 id="comparison-heading">Compare markers</h2>
+            <div class="comparison-selectors">
+              <label for="compare-a">Marker A</label>
+              <select id="compare-a" disabled>
+                <option value="">No markers available</option>
+              </select>
+              <label for="compare-b">Marker B</label>
+              <select id="compare-b" disabled>
+                <option value="">No markers available</option>
+              </select>
+            </div>
+            <p class="hint">B − A · Phase of Γ uses the shortest difference in [−180°, 180°).</p>
+            <dl class="comparison-readout">
+              <div>
+                <dt>Frequency difference</dt>
+                <dd id="comparison-frequency">—</dd>
+              </div>
+              <div>
+                <dt>Impedance difference</dt>
+                <dd id="comparison-impedance">—</dd>
+              </div>
+              <div>
+                <dt>Phase difference</dt>
+                <dd id="comparison-phase">—</dd>
+              </div>
+            </dl>
+            <p id="comparison-help" class="hint">
+              Add at least two markers to compare measurements.
+            </p>
           </section>
         </aside>
       </div>
-      <footer>Smith chart · D3 visualization</footer>
+      <footer>Smithkit</footer>
     </main>
   </body>
 </html>
